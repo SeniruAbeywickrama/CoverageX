@@ -1,0 +1,40 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword   # root password
+      MYSQL_DATABASE: todolist
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+
+  backend:
+    build: ./ToDoList-API/ToDoList-API
+    container_name: todo_backend
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "5067:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=server=db;port=3306;user=root;password=rootpassword;database=todolist;
+
+  frontend:
+    build:
+      context: ./todo
+      dockerfile: Dockerfile
+    container_name: todo_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5067
+
+volumes:
+  mysql_data:
