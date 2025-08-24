@@ -35,6 +35,12 @@ dotnet ef migrations add InitialCreate
 dotnet ef database update
 
 ```
+Then, need to packages for react application
+
+```bash
+cd todo
+npm install
+```
 
 The second,
 
